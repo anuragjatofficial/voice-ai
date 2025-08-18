@@ -5,7 +5,10 @@ import { Patient } from '@/lib/models';
 export async function GET() {
   try {
     await connectToDatabase;
+    console.log('Fetching patients...');
     const patients = await Patient.find({}).sort({ createdAt: -1 });
+    console.log(patients,"patients:");
+    
     return NextResponse.json({ patients });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch patients' }, { status: 500 });
