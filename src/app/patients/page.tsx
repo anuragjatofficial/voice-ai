@@ -335,7 +335,7 @@ export default function PatientsClient() {
               </Link>
               <button
                 onClick={fetchPatients}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
                 disabled={refreshing}
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
@@ -501,7 +501,7 @@ export default function PatientsClient() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => initiateCall(patient._id, patient.name)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2 text-sm font-medium"
+                            className="cursor-pointer bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2 text-sm font-medium"
                             disabled={refreshing}
                           >
                             <Phone className="w-4 h-4" />

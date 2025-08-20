@@ -4,7 +4,7 @@ import { Patient } from '@/lib/models';
 
 export async function GET() {
   try {
-    await connectToDatabase;
+    await connectToDatabase();
     console.log('Fetching patients...');
     const patients = await Patient.find({}).sort({ createdAt: -1 });
     console.log(patients,"patients:");
@@ -17,7 +17,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    await connectToDatabase;
+    await connectToDatabase();
     const body = await request.json();
     const patient = new Patient(body);
     await patient.save();
