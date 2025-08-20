@@ -60,7 +60,7 @@ export default function CallsPage() {
   };
 
   const filteredCalls = calls.filter((call) => {
-    const matchesSearch = call.patientName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = call.patientName?.toLowerCase()?.includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || call.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
