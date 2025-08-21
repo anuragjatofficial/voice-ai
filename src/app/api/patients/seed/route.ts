@@ -4,9 +4,9 @@ import { Patient } from "@/lib/models";
 
 const samplePatients = [
 	{
-		name: "John Doe",
-		phone: "+91-9876543210",
-		email: "john.doe@email.com",
+		name: "Abhinav Madan",
+		phone: "+919876543210",
+		email: "abhinav.madan@email.com",
 		mrn: "MRN001",
 		address: {
 			street: "123 Main St",
@@ -42,8 +42,8 @@ const samplePatients = [
 		notes: "Regular checkup patient",
 	},
 	{
-		name: "Jane Smith",
-		phone: "+91-9876543211",
+		name: "Anurag Choudhary",
+		phone: "+917291971753",
 		email: "jane.smith@email.com",
 		mrn: "MRN002",
 		address: {

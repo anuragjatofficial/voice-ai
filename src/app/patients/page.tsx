@@ -196,22 +196,40 @@ export default function PatientsClient() {
 
   const initiateCall = async (patientId: string, patientName: string) => {
     try {
+      setRefreshing(true);
+      
       const response = await fetch("/api/calls", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientId }),
+        body: JSON.stringify({ 
+          patientId,
+          assistantId: process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID, // Optional: use specific assistant
+        }),
       });
+      
       if (response.ok) {
         const data = await response.json();
         showNotification(
           `Call initiated for ${patientName}. Call ID: ${data.callLog._id}`,
           "success"
         );
+        
+        // Optional: Show VAPI call details
+        if (data.vapiCall) {
+          console.log('VAPI Call Details:', data.vapiCall);
+        }
       } else {
-        showNotification("Failed to initiate call", "error");
+        const errorData = await response.json();
+        showNotification(
+          errorData.error || "Failed to initiate call", 
+          "error"
+        );
       }
-    } catch {
+    } catch (error) {
+      console.error('Call initiation error:', error);
       showNotification("Error initiating call", "error");
+    } finally {
+      setRefreshing(false);
     }
   };
 

@@ -88,20 +88,5 @@ PatientSchema.pre('save', function(next) {
   next();
 });
 
-// Call Log Schema (unchanged)
-const CallLogSchema = new mongoose.Schema({
-  patientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
-  callStatus: { 
-    type: String, 
-    enum: ['initiated', 'ringing', 'answered', 'completed', 'failed', 'busy'], 
-    default: 'initiated' 
-  },
-  duration: { type: Number }, // in seconds
-  notes: { type: String },
-  startTime: { type: Date, default: Date.now },
-  endTime: { type: Date },
-  createdAt: { type: Date, default: Date.now }
-});
-
+// Export the Patient model
 export const Patient = mongoose.models.Patient || mongoose.model('Patient', PatientSchema);
-export const CallLog = mongoose.models.CallLog || mongoose.model('CallLog', CallLogSchema);

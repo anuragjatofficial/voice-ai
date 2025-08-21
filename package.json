@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@types/mongoose": "^5.11.96",
+    "@vapi-ai/server-sdk": "^0.10.0",
+    "@vapi-ai/web": "^2.3.8",
     "lucide-react": "^0.540.0",
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.1",
