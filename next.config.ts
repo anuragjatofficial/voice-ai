@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig: import('next').NextConfig = {
-  experimental: {
-    forceSwcTransforms: true,
-  },
   typescript: {
     ignoreBuildErrors: false,
   },
