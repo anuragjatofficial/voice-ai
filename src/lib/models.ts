@@ -61,7 +61,7 @@ const PatientSchema = new mongoose.Schema({
   // Legal Status
   usCitizenshipStatus: { 
     type: String, 
-    enum: ['citizen', 'permanent_resident', 'temporary_resident', 'visitor', 'undocumented', 'unknown'],
+    enum: ['citizen', 'permanent_resident', 'temporary_resident', 'visitor', 'undocumented', 'unknown','non_resident'],
     default: 'unknown'
   },
   

@@ -16,7 +16,9 @@ import {
   Baby,
   Users,
   Flag,
-  Briefcase
+  Briefcase,
+  Copy,
+  Check
 } from "lucide-react";
 
 interface CallDetailsProps {
@@ -73,6 +75,7 @@ export default function CallDetails({ callId }: CallDetailsProps) {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState("");
+  const [copiedTranscript, setCopiedTranscript] = useState(false);
 
   useEffect(() => {
     fetchCallDetails();
@@ -123,9 +126,11 @@ export default function CallDetails({ callId }: CallDetailsProps) {
     }
   };
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+   const formatDuration = (seconds?: number) => {
+    if (!seconds) return 'N/A';
+    const totalSeconds = Math.round(seconds); // Round to nearest whole second
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
@@ -134,6 +139,25 @@ export default function CallDetails({ callId }: CallDetailsProps) {
       style: 'currency',
       currency: 'USD'
     }).format(amount);
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedTranscript(true);
+      setTimeout(() => setCopiedTranscript(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedTranscript(true);
+      setTimeout(() => setCopiedTranscript(false), 2000);
+    }
   };
 
   if (loading) {
@@ -192,7 +216,7 @@ export default function CallDetails({ callId }: CallDetailsProps) {
             <Phone className="w-5 h-5 text-green-600" />
             <div>
               <p className="text-sm text-gray-600">Status</p>
-              <p className="font-medium capitalize">{call.status}</p>
+              <p className="font-medium capitalize text-gray-400">{call.status}</p>
             </div>
           </div>
 
@@ -200,8 +224,8 @@ export default function CallDetails({ callId }: CallDetailsProps) {
             <div className="flex items-center gap-3">
               <Clock className="w-5 h-5 text-blue-600" />
               <div>
-                <p className="text-sm text-gray-600">Duration</p>
-                <p className="font-medium">{formatDuration(call.duration)}</p>
+                <p className="text-sm text-gray-600">Duration (in mins)</p>
+                <p className="font-medium text-gray-400">{formatDuration(call.duration)}</p>
               </div>
             </div>
           )}
@@ -211,7 +235,7 @@ export default function CallDetails({ callId }: CallDetailsProps) {
               <DollarSign className="w-5 h-5 text-green-600" />
               <div>
                 <p className="text-sm text-gray-600">Cost</p>
-                <p className="font-medium">{formatCurrency(call.cost)}</p>
+                <p className="font-medium text-gray-400">{formatCurrency(call.cost)}</p>
               </div>
             </div>
           )}
@@ -220,7 +244,7 @@ export default function CallDetails({ callId }: CallDetailsProps) {
         {call.patientId && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <p className="text-sm text-gray-600">Patient</p>
-            <p className="font-medium">{call.patientId.name}</p>
+            <p className="font-medium text-gray-400">{call.patientId.name}</p>
             <p className="text-sm text-gray-500">{call.patientId.phone}</p>
           </div>
         )}
@@ -242,42 +266,42 @@ export default function CallDetails({ callId }: CallDetailsProps) {
               {structuredData.patient_name && (
                 <div>
                   <label className="text-sm text-gray-600">Name</label>
-                  <p className="font-medium">{structuredData.patient_name}</p>
+                  <p className="font-medium text-gray-400">{structuredData.patient_name}</p>
                 </div>
               )}
               
               {structuredData.patient_phone && (
                 <div>
                   <label className="text-sm text-gray-600">Phone</label>
-                  <p className="font-medium">{structuredData.patient_phone}</p>
+                  <p className="font-medium text-gray-400">{structuredData.patient_phone}</p>
                 </div>
               )}
               
               {structuredData.email && (
                 <div>
                   <label className="text-sm text-gray-600">Email</label>
-                  <p className="font-medium">{structuredData.email}</p>
+                  <p className="font-medium text-gray-400">{structuredData.email}</p>
                 </div>
               )}
               
               {structuredData.date_of_birth && (
                 <div>
                   <label className="text-sm text-gray-600">Date of Birth</label>
-                  <p className="font-medium">{new Date(structuredData.date_of_birth).toLocaleDateString()}</p>
+                  <p className="font-medium text-gray-400">{new Date(structuredData.date_of_birth).toLocaleDateString()}</p>
                 </div>
               )}
               
               {structuredData.address && (
                 <div>
                   <label className="text-sm text-gray-600">Address</label>
-                  <p className="font-medium">{structuredData.address}</p>
+                  <p className="font-medium text-gray-400">{structuredData.address}</p>
                 </div>
               )}
               
               {structuredData.mrn && (
                 <div>
                   <label className="text-sm text-gray-600">MRN</label>
-                  <p className="font-medium">{structuredData.mrn}</p>
+                  <p className="font-medium text-gray-400">{structuredData.mrn}</p>
                 </div>
               )}
             </div>
@@ -292,35 +316,35 @@ export default function CallDetails({ callId }: CallDetailsProps) {
               {structuredData.insurance && (
                 <div>
                   <label className="text-sm text-gray-600">Insurance Provider</label>
-                  <p className="font-medium">{structuredData.insurance}</p>
+                  <p className="font-medium text-gray-400">{structuredData.insurance}</p>
                 </div>
               )}
               
               {structuredData.is_pregnant && (
                 <div>
                   <label className="text-sm text-gray-600">Pregnancy Status</label>
-                  <p className="font-medium capitalize">{structuredData.is_pregnant}</p>
+                  <p className="font-medium capitalize text-gray-400">{structuredData.is_pregnant}</p>
                 </div>
               )}
               
               {structuredData.income && (
                 <div>
                   <label className="text-sm text-gray-600">Income</label>
-                  <p className="font-medium">{formatCurrency(parseFloat(structuredData.income))}</p>
+                  <p className="font-medium text-gray-400">{formatCurrency(parseFloat(structuredData.income))}</p>
                 </div>
               )}
               
               {structuredData.is_us_citizen && (
                 <div>
                   <label className="text-sm text-gray-600">US Citizen</label>
-                  <p className="font-medium capitalize">{structuredData.is_us_citizen}</p>
+                  <p className="font-medium capitalize text-gray-400">{structuredData.is_us_citizen}</p>
                 </div>
               )}
               
               {structuredData.is_asylee_or_refugee && (
                 <div>
                   <label className="text-sm text-gray-600">Asylee/Refugee Status</label>
-                  <p className="font-medium capitalize">{structuredData.is_asylee_or_refugee}</p>
+                  <p className="font-medium capitalize text-gray-400">{structuredData.is_asylee_or_refugee}</p>
                 </div>
               )}
             </div>
@@ -337,27 +361,27 @@ export default function CallDetails({ callId }: CallDetailsProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Name</label>
-                  <p className="font-medium">{structuredData.family_member_name}</p>
+                  <p className="font-medium text-gray-400">{structuredData.family_member_name}</p>
                 </div>
                 
                 {structuredData.relationship && (
                   <div>
                     <label className="text-sm text-gray-600">Relationship</label>
-                    <p className="font-medium capitalize">{structuredData.relationship}</p>
+                    <p className="font-medium capitalize text-gray-400">{structuredData.relationship}</p>
                   </div>
                 )}
                 
                 {structuredData.family_member_dob && (
                   <div>
                     <label className="text-sm text-gray-600">Date of Birth</label>
-                    <p className="font-medium">{new Date(structuredData.family_member_dob).toLocaleDateString()}</p>
+                    <p className="font-medium text-gray-400">{new Date(structuredData.family_member_dob).toLocaleDateString()}</p>
                   </div>
                 )}
                 
                 {structuredData.family_member_income && (
                   <div>
                     <label className="text-sm text-gray-600">Income</label>
-                    <p className="font-medium">{formatCurrency(parseFloat(structuredData.family_member_income))}</p>
+                    <p className="font-medium text-gray-400">{formatCurrency(parseFloat(structuredData.family_member_income))}</p>
                   </div>
                 )}
               </div>
@@ -374,7 +398,7 @@ export default function CallDetails({ callId }: CallDetailsProps) {
             {Object.entries(call.costBreakdown).map(([key, value]) => (
               <div key={key} className="text-center">
                 <p className="text-sm text-gray-600 capitalize">{key}</p>
-                <p className="font-medium">{formatCurrency(value as number)}</p>
+                <p className="font-medium text-gray-400">{formatCurrency(value as number)}</p>
               </div>
             ))}
           </div>
@@ -384,10 +408,28 @@ export default function CallDetails({ callId }: CallDetailsProps) {
       {/* Transcript */}
       {call.transcript && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            Transcript
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Transcript
+            </h3>
+            <button
+              onClick={() => copyToClipboard(call.transcript!)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md transition-colors duration-200 cursor-pointer"
+            >
+              {copiedTranscript ? (
+                <>
+                  <Check className="w-4 h-4 text-green-600" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
           <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
             <pre className="whitespace-pre-wrap text-sm text-gray-700">{call.transcript}</pre>
           </div>

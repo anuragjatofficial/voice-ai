@@ -261,16 +261,12 @@ interface StructuredData {
   date_of_birth?: string;
   mrn?: string;
   insurance?: string;
-  'is_pregnant\t'?: 'yes' | 'no' | 'unsure'; // Note the tab character
   is_pregnant?: 'yes' | 'no' | 'unsure'; // Also handle without tab
   income?: string;
   family_member_name?: string;
-  'relationship\t'?: string; // Note the tab character
   relationship?: string; // Also handle without tab
   family_member_dob?: string;
-  'family_member_income\t'?: string; // Note the tab character
   family_member_income?: string; // Also handle without tab
-  'is_us_citizen\t'?: 'yes' | 'no'; // Note the tab character
   is_us_citizen?: 'yes' | 'no'; // Also handle without tab
   is_asylee_or_refugee?: 'yes' | 'no';
 }
@@ -837,9 +833,7 @@ async function updatePatientFromStructuredData(patientId: string, structuredData
 
     // Helper function to get field value, handling tab characters
     const getFieldValue = (key: string): string | undefined => {
-      return structuredData[key as keyof StructuredData] || 
-             structuredData[`${key}\t` as keyof StructuredData] || 
-             undefined;
+      return structuredData[key as keyof StructuredData] || undefined;
     };
 
     // Prepare update object - only update fields that have values
