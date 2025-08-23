@@ -17,8 +17,12 @@ import {
   PhoneCall,
   CheckCircle,
   AlertCircle,
-  Timer
+  Timer,
+  Eye,
+  FileText,
+  X
 } from "lucide-react";
+import CallDetails from "@/components/CallDetails";
 
 interface Call {
   _id: string;
@@ -42,6 +46,7 @@ export default function CallsPage() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedCall, setSelectedCall] = useState<Call | null>(null);
 
   useEffect(() => {
     fetchCalls();
@@ -130,8 +135,9 @@ export default function CallsPage() {
 
   const formatDuration = (seconds?: number) => {
     if (!seconds) return 'N/A';
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+    const totalSeconds = Math.round(seconds); // Round to nearest whole second
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
@@ -225,7 +231,7 @@ export default function CallsPage() {
               </button>
               <button
                 onClick={fetchCalls}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" />
                 Refresh
@@ -363,7 +369,7 @@ export default function CallsPage() {
                       Phone Number
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Duration
+                      Duration (in mins)
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Status
@@ -435,23 +441,20 @@ export default function CallsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            {call.transcript && (
-                              <button 
-                                className="text-blue-600 hover:text-blue-700 p-1 rounded transition-colors"
-                                title="View transcript"
-                              >
-                                <Play className="w-4 h-4" />
-                              </button>
-                            )}
-                            {patientId && (
-                              <Link
-                                href={`/patients/${patientId}`}
-                                className="text-gray-600 hover:text-gray-700 p-1 rounded transition-colors"
-                                title="View patient details"
-                              >
-                                <Users className="w-4 h-4" />
-                              </Link>
-                            )}
+                            <Link
+                              href={`/patients/${patientId}`}
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2 text-sm font-medium"
+                            >
+                              <Eye className="w-4 h-4" />
+                              View Patient
+                            </Link>
+                            <button
+                              onClick={() => setSelectedCall(call)}
+                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 inline-flex items-center gap-2 text-sm font-medium"
+                            >
+                              <FileText className="w-4 h-4" />
+                              Call Details
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -463,6 +466,26 @@ export default function CallsPage() {
           </div>
         )}
       </div>
+
+      {/* Call Details Modal */}
+      {selectedCall && (
+        <div className="fixed inset-0 bg-gray-800/20  flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-lg">
+              <h2 className="text-lg font-semibold text-gray-900">Call Details</h2>
+              <button
+                onClick={() => setSelectedCall(null)}
+                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <CallDetails callId={selectedCall._id} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
