@@ -36,7 +36,7 @@ Frontend (Next.js) ↔ API Routes (Next.js) ↔ MongoDB Database
 ### 1. Clone & Install
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/anuragjatofficial/voice-ai.git
 cd voice-ai
 npm install
 ```
