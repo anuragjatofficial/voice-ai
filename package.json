@@ -6,9 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "@types/mongoose": "^5.11.96",
     "@vapi-ai/server-sdk": "^0.10.0",
     "@vapi-ai/web": "^2.3.8",
@@ -28,6 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

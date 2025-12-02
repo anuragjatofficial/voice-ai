@@ -13,11 +13,7 @@ VoiceAI is a Patient Call Dashboard application that allows healthcare staff to:
 
 ## 🏗️ Architecture
 
-```
-Frontend (Next.js) ↔ API Routes (Next.js) ↔ MongoDB Database
-                           ↕
-                    VAPI Service Integration
-```
+![alt text](architecture_diagram.png)
 
 - **Frontend**: Next.js with Tailwind CSS for responsive UI
 - **Backend**: Next.js API routes handling business logic
@@ -606,6 +602,13 @@ interface CallLog {
 - Environment variables for sensitive data
 - MongoDB connection with authentication
 - CORS configuration for production
+
+## 🧩 MSSQL → Mongo Patient Sync
+
+- Set `PRISMA_MSSQL_URL` (SQL Server connection string) in your environment.
+- Generate Prisma client: `npm run prisma:generate`.
+- Trigger sync via `POST /api/patients/sync`.
+- Sync upserts by `mrn` and preserves unique `phone` constraints.
 
 ## 🐛 Troubleshooting
 

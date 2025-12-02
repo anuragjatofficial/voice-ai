@@ -1,0 +1,36 @@
+// Prisma schema for connecting to client's MSSQL and reading Patients
+// Adjust @@map and @map annotations to match the client's actual table/columns.
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource mssql {
+    provider = "sqlserver"
+    url      = env("PRISMA_MSSQL_URL")
+}
+
+model Patient {
+    id                    Int       @id @default(autoincrement())
+    mrn                   String    @unique @map("MRN")
+    name                  String    @map("Name")
+    phone                 String?   @map("Phone")
+    email                 String?   @map("Email")
+    dateOfBirth           DateTime? @map("DateOfBirth")
+    street                String?   @map("Street")
+    city                  String?   @map("City")
+    state                 String?   @map("State")
+    zipCode               String?   @map("ZipCode")
+    country               String?   @map("Country")
+    insuranceProvider     String?   @map("InsuranceProvider")
+    insurancePolicyNumber String?   @map("InsurancePolicyNumber")
+    insuranceMemberName   String?   @map("InsuranceMemberName")
+    pregnancyStatus       String?   @map("PregnancyStatus")
+    annualIncome          Int?      @map("AnnualIncome")
+    incomeVerified        Boolean?  @map("IncomeVerified")
+    status                String?   @map("Status")
+    notes                 String?   @map("Notes")
+    updatedAt             DateTime? @map("UpdatedAt")
+
+    @@map("Patients")
+}
